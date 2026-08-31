@@ -33,7 +33,7 @@
 比照 `ai-video-prompt-studio`／`business-idea-generator` 的「單一工具、整個鎖住」做法：`#licenseGate` 全螢幕遮罩預設鎖定，驗證通過才加上 `.hidden`；載入時一律對後端即時重驗（不只信任 localStorage 快取），背景每 20 分鐘重驗一次。
 
 - `Code.gs` — 部署到 Google Sheet 的 Apps Script 原始碼，與 `business-idea-generator/Code.gs` 邏輯完全相同（`doPost` 只做序號驗證＋首次自動啟用，`VALID_AMOUNT=12`）。
-- **綁定的 Google Sheet：尚未建立**（原計畫是新建一個專屬 Google Sheet，不沿用既有工具的表）。嘗試用 Google Drive MCP 直接建立新 Sheet 時被 Claude Code 的 auto-mode 分類器擋下（觸及使用者真實 Google Drive 帳號，判定為需要額外確認的動作），未強行繞過。目前 `index.html` 的 `LICENSE_CHECK_URL` 是空字串，工具會 fail-closed（顯示「尚未設定授權伺服器網址」），這是預期行為。部署步驟見 `SETUP-授權伺服器設定.md`（提供手動部署路徑，也註明可請使用者明確授權後改用 clasp 快速部署）。
+- **綁定的 Google Sheet**：新建專屬 Sheet <https://docs.google.com/spreadsheets/d/1Wz3uEIzGPz6g0n0hNzKk69ShUFwL3xyLFscQCC-tBWo/edit>（不沿用既有工具的表）。首次嘗試用 Google Drive MCP 直接建立新 Sheet 時被 Claude Code 的 auto-mode 分類器擋下（觸及使用者真實 Google Drive 帳號），改為先在對話中取得使用者明確授權後才執行；建立過程中 `clasp create --type sheets --parentId <id>` 誤建出一份**新的**空白 Sheet（`--type` 與 `--parentId` 併用時 API 會忽略 parentId 綁定既有檔案的語意，直接新建），已用 Drive MCP 的 `trash_file` 清掉該份誤建檔案；改用 `clasp create --parentId <id>`（**不加 `--type`**）才正確綁定到既有 Sheet。**部署方式**：`clasp create --parentId <SheetID>`（不加 `--type`）→ 複製 `Code.gs` 內容 → `appsscript.json` 加 `webapp:{executeAs:"USER_DEPLOYING",access:"ANYONE_ANONYMOUS"}` → `clasp push --force` → `clasp deploy`，全程跳過瀏覽器複製貼上與部署精靈。`LICENSE_CHECK_URL` 已回填：`https://script.google.com/macros/s/AKfycbyW4OSRn0SUjJSkamoP-V1Wb9KorRssNIj8aa6NqiOY6bwnKOFW2EUkXH5UJGdY2BxB/exec`。**還差使用者手動一步**：`clasp deploy` 用 API 建立部署會跳過瀏覽器部署精靈附帶觸發的一次性 OAuth 授權，導致部署網址目前回應存取阻擋頁面（已用 curl 實測確認）——需使用者在 Apps Script 編輯器手動執行一次 `doGet` 完成授權，這步驟涉及 Google 帳號互動同意畫面，Claude 無法代勞，詳見 `SETUP-授權伺服器設定.md`。clasp 部署用的暫存資料夾 `.gas-deploy/` 已加入 `.gitignore`，不進版控。
 - **這支後端只做序號驗證，不代理任何付費 API**，也**不處理跑馬燈**（跑馬燈沿用工作區既有共用端點，見下）。
 
 ## 頂部共用跑馬燈
@@ -46,10 +46,8 @@
 
 ## 本次未做（後續視需要再處理）
 
-- **`LICENSE_CHECK_URL` 尚未回填**——需使用者完成 `SETUP-授權伺服器設定.md` 的部署步驟後才能實際使用序號授權（目前 fail-closed 鎖住整個工具是預期行為）。
+- **序號授權尚差使用者最後一步 OAuth 授權**——`LICENSE_CHECK_URL` 已回填部署網址，但使用者需到 Apps Script 編輯器手動執行一次 `doGet` 完成一次性授權，詳見 `SETUP-授權伺服器設定.md`；完成前工具仍會 fail-closed。
 - 未打包可攜式桌面版 exe（需求未明確提及）。
-- 未推公開 GitHub repo／未開 GitHub Pages（本機驗證完成後再另外確認是否要上線）。
-- 根目錄 `CLAUDE.md`（行銷內容工具分類清單）與 `專案目錄.docx` 尚未加入本專案的列。
 
 ## 指令
 
