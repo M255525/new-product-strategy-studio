@@ -40,6 +40,10 @@
 
 `#marqueeBar` 內容抓自工作區既有的共用授權伺服器（`https://script.google.com/macros/s/AKfycbwKX0.../exec`，與 `business-idea-generator`／`coffee-ig-planner`／`Prompt` 等多個姊妹工具共用同一個 Google Sheet），做法完全比照 `business-idea-generator/index.html`。改跑馬燈內容直接編輯共用 Sheet 即可，不需要重新部署任何 Apps Script。
 
+## PDF 匯出浮水印（2026-08-31 新增）
+
+`#pdfWatermark`（`<img id="wmImg">`）比照 `restaurant-feasibility-calculator`／`business-idea-generator` 的做法：內嵌 base64 data URI（不是 CSS `background-image`，會被瀏覽器「列印背景圖形」選項預設擋掉，`<img>` 是內容一定會印出來）、`position:fixed`＋`@media print`下 flex 置中、`opacity:.11`、`width:42%`（`min/max-width` 200-380px 夾住），讓每一頁都重複出現。**圖檔是使用者本次直接提供的新版「馬克老師 AI・工具・學習・成長」圖示**（非沿用 `IPA_Kano/watermark-source.png` 那份舊版——原圖 1536×1024、已去背透明background，裁掉透明邊界後縮到寬 480px 存成本專案根目錄 `watermark-source.png`，202KB），跟其他專案共用的舊版浮水印不是同一個檔案。base64 字串（約270KB）透過 Python 腳本直接字串替換塞進 `index.html` 的 `WATERMARK_DATA_URI` 常數，沒有經過對話視窗。`init()` 載入時把 `WATERMARK_DATA_URI` 指派給 `#wmImg` 的 `src`。已用 Playwright 驗證：`#wmImg.src` 正確載入 base64 圖片、按「匯出 PDF」後 `buildPrintReport()`＋`window.print()` 正確觸發。
+
 ## 隱私與警語
 
 無伺服器端經手使用者資料（序號授權後端除外，只傳送序號本身）；產品資料、競品資訊、AI設定皆只存在使用者瀏覽器的 localStorage。首頁與手冊皆明列使用警語：生成內容僅供新品開發發想參考不構成商業決策建議、AI內容需自行查核、請勿輸入真實個資或機密資料、僅供教學與個人使用禁止商業化。
