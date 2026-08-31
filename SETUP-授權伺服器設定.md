@@ -4,19 +4,19 @@
 
 ## 你的 Google Sheet
 
-<https://docs.google.com/spreadsheets/d/1Wz3uEIzGPz6g0n0hNzKk69ShUFwL3xyLFscQCC-tBWo/edit>
+<https://docs.google.com/spreadsheets/d/1uD0pPmhoh-jdBe0wHdYJr6p0LlwKWhpPfw0Me1IYBHo/edit>
 
-表頭：`序號` / `開始日期` / `結束日期`。已有一筆測試列（序號 `mark0101`，開始/結束日期留空，第一次驗證時會自動開卡）。
+這份 Sheet 欄位是「任務／優先順序／負責人／狀態／序號／開始日期／結束日期／交件／附註」（使用者指定沿用的任務追蹤表，含其他任務追蹤用途，表頭與 `business-idea-generator` 綁定的表完全一致，但這是不同的一份 Sheet）。「序號」「開始日期」「結束日期」以外的欄位可以保留不動。已有一筆測試列（序號 `mark0131`，2026/8/31 - 2027/12/31）。
 
 ## 部署狀態：已用 clasp 完成部署
 
-**已用 `clasp` 完成部署，不需要你再手動操作 Apps Script 編輯器貼程式碼。** 過程：`clasp create --parentId <此Sheet的檔案ID>` 建立綁定腳本專案 → 複製 `Code.gs` 貼上 → `appsscript.json` 加上 `webapp:{executeAs:"USER_DEPLOYING", access:"ANYONE_ANONYMOUS"}` → `clasp push --force` → `clasp deploy` 一次成功，跳過瀏覽器複製貼上與手動部署設定畫面。
+**已用 `clasp` 完成部署，不需要你再手動操作 Apps Script 編輯器貼程式碼。** 過程：`clasp create --parentId <此Sheet的檔案ID>`（不加 `--type`，才能正確綁定到這份既有 Sheet）建立綁定腳本專案 → 複製 `Code.gs` 貼上 → `appsscript.json` 加上 `webapp:{executeAs:"USER_DEPLOYING", access:"ANYONE_ANONYMOUS"}` → `clasp push --force` → `clasp deploy` 一次成功，跳過瀏覽器複製貼上與手動部署設定畫面。
 
 部署網址已回填到 `index.html` 的 `LICENSE_CHECK_URL`：
 ```
-https://script.google.com/macros/s/AKfycbyW4OSRn0SUjJSkamoP-V1Wb9KorRssNIj8aa6NqiOY6bwnKOFW2EUkXH5UJGdY2BxB/exec
+https://script.google.com/macros/s/AKfycbzvPXvkxcG2XHqa0lkBBx_C00q0tmmq9bru0JqdNEye4gVh6UHv1ohSX5gaWqz60ySz/exec
 ```
-Apps Script 編輯器（若之後要手動改程式碼或管理部署）：<https://script.google.com/d/1tbkHYdlvu8ObQP41H7OPur3VXjDjbaBnuf4yW0-kfxlKNZuTSkWV36vJ/edit>
+Apps Script 編輯器（若之後要手動改程式碼或管理部署）：<https://script.google.com/d/1GaBu7JynKpZHwv9pgNpHn9XJX24DhLT2GL_SCfW_ir5kPpcwOfQ7DCS0/edit>
 
 ### ⚠️ 還差最後一步：你需要手動授權一次
 
@@ -27,7 +27,7 @@ Apps Script 編輯器（若之後要手動改程式碼或管理部署）：<http
 3. 會跳出「需要授權」→ 選你的帳號 → 若出現「Google 尚未驗證這個應用程式」，點左下角「進階」→「前往...(不安全)」→ 允許。這是正常現象（因為這是你自己寫的私人腳本，沒有送 Google 審查），不是真的有安全疑慮。
 4. 執行完成後（下方「執行紀錄」顯示成功），部署網址就會正常運作，不需要重新部署。
 
-授權完成後，直接開啟工具首頁，用 Sheet 裡的測試序號 `mark0101` 驗證應該會顯示「✓ 剩餘 N 天可用」。
+授權完成後，直接開啟工具首頁，用 Sheet 裡的測試序號 `mark0131` 驗證應該會顯示「✓ 剩餘 N 天可用」。
 
 ## 驗證部署是否成功
 
